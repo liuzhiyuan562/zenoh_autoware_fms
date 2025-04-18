@@ -43,6 +43,8 @@ class VehiclePose:
         self.scope = scope
         self.originX = float(os.environ['REACT_APP_MAP_ORIGIN_LAT'])
         self.originY = float(os.environ['REACT_APP_MAP_ORIGIN_LON'])
+        print('originX: ', self.originX)
+        print('originY: ', self.originY)
         self.projector = UtmProjector(Origin(self.originX, self.originY))
         self.initialize()
 
@@ -68,19 +70,22 @@ class VehiclePose:
             # print("size of the message (bytes) ", struct.calcsize(sample.payload))
             # print(sample.payload)
             data = VehicleKinematics.deserialize(sample.payload.to_bytes())
-            # print(data)
+            # print("kinematics",data)
             self.positionX = data.pose.pose.pose.position.x
             self.positionY = data.pose.pose.pose.position.y
+            print("kinematics", self.positionX, self.positionY)
             gps = self.projector.reverse(BasicPoint3d(self.positionX, self.positionY, 0.0))
             self.lat = gps.lat
             self.lon = gps.lon
+            print("kinematics", self.lat, self.lon)
+            
 
         def callback_goalPosition(sample):
             print('Got message of route of vehicle')
             data = Route.deserialize(sample.payload.to_bytes())
-            if len(data.data) == 1:
-                self.goalX = data.data[0].goal.position.x
-                self.goalY = data.data[0].goal.position.y
+            if len(data.data) == 1: # type:ignore
+                self.goalX = data.data[0].goal.position.x# type:ignore
+                self.goalY = data.data[0].goal.position.y# type:ignore
                 gps = self.projector.reverse(BasicPoint3d(self.goalX, self.goalY, 0.0))
                 self.goalLat = gps.lat
                 self.goalLon = gps.lon

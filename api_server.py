@@ -25,6 +25,40 @@ manual_controller = None
 mjpeg_server = None
 pose_service = PoseServer(session, use_bridge_ros2dds)
 
+# import zenoh
+
+# # 使用通配符查询最顶层的命名空间
+# replies = session.get('@/**')
+
+# # 分析和收集命名空间
+# namespaces = set()
+# for reply in replies:
+#     key = str(reply.ok.key_expr)
+#     print(key)
+#     # 提取第一级命名空间
+#     parts = key.strip('/').split('/')
+#     if parts:
+#         namespaces.add(parts[0])
+
+# print("顶级命名空间:", namespaces)
+
+# # 如果想查看特定命名空间下的子命名空间
+# specific_namespace = "ros2"  # 例如查看 ros2 下的命名空间
+# replies = session.get(f'@/{specific_namespace}/**')
+
+# sub_namespaces = set()
+# for reply in replies:
+#     key = str(reply.ok.key_expr)
+#     # 移除前缀并分割路径
+#     key = key.replace(f'/{specific_namespace}/', '', 1)
+#     parts = key.strip('/').split('/')
+#     if parts:
+#         sub_namespaces.add(parts[0])
+
+# print(f"{specific_namespace} 下的子命名空间:", sub_namespaces)
+
+# session.close()
+
 
 @app.get('/')
 async def root():
