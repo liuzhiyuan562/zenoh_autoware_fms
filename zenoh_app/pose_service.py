@@ -105,12 +105,15 @@ class VehiclePose:
 
         for reply in replies:
             try:
-                print(">> Received ('{}': {})".format(reply.ok.key_expr, ClearRouteResponse.deserialize(reply.ok.payload.to_bytes())))
+                print(">>goal, Received ('{}': {})".format(reply.ok.key_expr, ClearRouteResponse.deserialize(reply.ok.payload.to_bytes())))
             except Exception as e:
                 print(f'Failed to handle response: {e}')
 
         coordinate = self.projector.forward(GPSPoint(float(lat), float(lon), 0))
         q = self.orientationGen.genQuaternion_seg(coordinate.x, coordinate.y)
+        print('goal, lat: ', lat, 'lon: ', lon)
+        print('goal, coordinate.x: ', coordinate.x, 'coordinate.y: ', coordinate.y)
+        print('goal, q: ', q)
         request = SetRoutePointsRequest(
             header=Header(stamp=Time(sec=0, nanosec=0), frame_id='map'),
             option=RouteOption(allow_goal_modification=False),
@@ -121,7 +124,7 @@ class VehiclePose:
         replies = self.session.get(self.topic_prefix + SET_ROUTE_POINT_KEY_EXPR, payload=request)
         for reply in replies:
             try:
-                print(">> Received ('{}': {})".format(reply.ok.key_expr, SetRoutePointsResponse.deserialize(reply.ok.payload.to_bytes())))
+                print(">>goal, Received ('{}': {})".format(reply.ok.key_expr, SetRoutePointsResponse.deserialize(reply.ok.payload.to_bytes())))
             except Exception as e:
                 print(f'Failed to handle response: {e}')
 
@@ -134,7 +137,7 @@ class VehiclePose:
         replies = self.session.get(self.topic_prefix + SET_AUTO_MODE_KEY_EXPR)
         for reply in replies:
             try:
-                print(">> Received ('{}': {})".format(reply.ok.key_expr, ChangeOperationModeResponse.deserialize(reply.ok.payload.to_bytes())))
+                print(">>goal,  Received ('{}': {})".format(reply.ok.key_expr, ChangeOperationModeResponse.deserialize(reply.ok.payload.to_bytes())))
             except Exception as e:
                 print(f'Failed to handle response: {e}')
 
